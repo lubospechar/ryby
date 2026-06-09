@@ -1,7 +1,7 @@
 from django.contrib import admin
 from leaflet.admin import LeafletGeoAdmin
 
-from rybniky.models import Rybnik, Vlastnik, OdpovednaOsoba, TBD
+from rybniky.models import Rybnik, Vlastnik, OdpovednaOsoba, TBD, Ryba
 
 
 @admin.register(Vlastnik)
@@ -15,22 +15,92 @@ class OdpovednaOsobaAdmin(admin.ModelAdmin):
 
 @admin.register(Rybnik)
 class RybnikAdmin(LeafletGeoAdmin):
-    list_display = ("nazev", "vodni_plocha", "obec", "okres")
-    list_filter = (
-        "obec",
+    list_display = (
+        "nazev",
         "okres",
+        "kraj",
+        "charakter",
+        "katastralni_vodni_plocha",
+        "zatopena_vodni_plocha",
     )
-    search_fields = ("nazev",)
+    list_filter = (
+        "kraj",
+        "okres",
+        "charakter",
+    )
+    search_fields = (
+        "nazev",
+        "katastralni_obec",
+        "parcely",
+        "okres",
+        "kraj",
+    )
     ordering = ("nazev",)
+
+
     leaflet_default_lon = 15
     leaflet_default_lat = 50
     leaflet_default_zoom = 7
+
+    fieldsets = (
+        (
+            "Základní údaje",
+            {
+                "fields": (
+                    "nazev",
+                    "charakter",
+                    "pouziti",
+                )
+            },
+        ),
+        (
+            "Umístění",
+            {
+                "fields": (
+                    "kraj",
+                    "okres",
+                    "katastralni_obec",
+                    "parcely",
+                )
+            },
+        ),
+        (
+            "Parametry rybníka",
+            {
+                "fields": (
+                    "katastralni_vodni_plocha",
+                    "zatopena_vodni_plocha",
+                    "hloubka",
+                    "doba_nahaneni",
+                    "doba_vypousteni",
+                )
+            },
+        ),
+        (
+            "Osoby",
+            {
+                "fields": (
+                    "vlastnik",
+                    "odpovedna_osoba",
+                )
+            },
+        ),
+        (
+            "Mapa",
+            {
+                "fields": (
+                    "polygon",
+                )
+            },
+        ),
+    )
 
 
 @admin.register(TBD)
 class TBDAdmin(admin.ModelAdmin):
     list_display = (
         "rybnik",
+        'datum',
         "mimoradna_obchuzka",
         "teplota",
         "srazky",
@@ -39,6 +109,7 @@ class TBDAdmin(admin.ModelAdmin):
     )
     list_filter = (
         "rybnik",
+        'datum',
         "mimoradna_obchuzka",
         "normalni_stav_hladiny",
     )
@@ -59,6 +130,7 @@ class TBDAdmin(admin.ModelAdmin):
                 "fields": (
                     "rybnik",
                     "mimoradna_obchuzka",
+                    'datum'
                 )
             },
         ),
@@ -100,4 +172,12 @@ class TBDAdmin(admin.ModelAdmin):
                 )
             },
         ),
+    )
+
+
+@admin.register(Ryba)
+class RybaAdmin(admin.ModelAdmin):
+    list_display = (
+        "jmeno",
+        "znacka",
     )
