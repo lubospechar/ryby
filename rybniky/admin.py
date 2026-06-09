@@ -1,7 +1,7 @@
 from django.contrib import admin
 from leaflet.admin import LeafletGeoAdmin
 
-from rybniky.models import Rybnik, Vlastnik, OdpovednaOsoba, TBD, Ryba
+from rybniky.models import Rybnik, Vlastnik, OdpovednaOsoba, TBD, Ryba, Produkce, PracovniNaklady
 
 
 @admin.register(Vlastnik)
@@ -180,4 +180,122 @@ class RybaAdmin(admin.ModelAdmin):
     list_display = (
         "jmeno",
         "znacka",
+    )
+
+
+@admin.register(Produkce)
+class ProdukceAdmin(admin.ModelAdmin):
+    list_display = (
+        "datum",
+        "rybnik",
+        "nasazeno_vyloveno",
+        "ryba",
+        "stari",
+        "ks",
+        "hmotnost",
+        "cena_kg",
+    )
+    list_filter = (
+        "nasazeno_vyloveno",
+        "rybnik",
+        "ryba",
+        "datum",
+    )
+    ordering = (
+        "-datum",
+        "rybnik__nazev",
+        "ryba__jmeno",
+    )
+    date_hierarchy = "datum"
+
+
+    fieldsets = (
+        (
+            "Základní údaje",
+            {
+                "fields": (
+                    "rybnik",
+                    "datum",
+                    "nasazeno_vyloveno",
+                )
+            },
+        ),
+        (
+            "Ryba",
+            {
+                "fields": (
+                    "ryba",
+                    "stari",
+                    "puvod",
+                    "zdroj"
+                )
+            },
+        ),
+        (
+            "Množství a cena",
+            {
+                "fields": (
+                    "ks",
+                    "hmotnost",
+                    "cena_kg",
+                )
+            },
+        ),
+    )
+
+
+
+@admin.register(PracovniNaklady)
+class PracovniNakladyAdmin(admin.ModelAdmin):
+    list_display = (
+        "date",
+        "rybnik",
+        "cas",
+        "najete_km",
+        "popis_prace",
+    )
+    list_filter = (
+        "rybnik",
+        "date",
+    )
+    search_fields = (
+        "rybnik__nazev",
+        "popis_prace",
+    )
+    ordering = (
+        "-date",
+        "rybnik__nazev",
+    )
+    date_hierarchy = "date"
+    autocomplete_fields = (
+        "rybnik",
+    )
+
+    fieldsets = (
+        (
+            "Základní údaje",
+            {
+                "fields": (
+                    "rybnik",
+                    "date",
+                )
+            },
+        ),
+        (
+            "Práce",
+            {
+                "fields": (
+                    "cas",
+                    "popis_prace",
+                )
+            },
+        ),
+        (
+            "Doprava",
+            {
+                "fields": (
+                    "najete_km",
+                )
+            },
+        ),
     )

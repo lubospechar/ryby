@@ -80,14 +80,17 @@ class Produkce(models.Model):
         NASAZENO = "nasazeno", "Nasazeno"
         VYLOVENO = "vyloveno", "Vyloveno"
 
+
     rybnik = models.ForeignKey(Rybnik, on_delete=models.CASCADE)
     datum = models.DateField(verbose_name="Datum")
     nasazeno_vyloveno = models.CharField(max_length=255, choices=NasazenoVyloveno.choices, verbose_name="Nasazeno/vyloveno")
     ryba = models.ForeignKey(Ryba, on_delete=models.CASCADE)
-    stari = models.PositiveSmallIntegerField(verbose_name="Stáří (roky)")
-    ks = models.PositiveSmallIntegerField(verbose_name="Ks", null=True, blank=True)
-    hmotnost = models.FloatField(verbose_name="Hmotnost (ks)", null=True, blank=True)
-    cena_kg = models.FloatField(verbose_name="Cena za kg", null=True, blank=True)
+    puvod = models.CharField(max_length=255, verbose_name="Původ", null=True, blank=True)
+    zdroj = models.ForeignKey(Rybnik, on_delete=models.CASCADE, verbose_name="Zdroj", null=True, blank=True, related_name="zdroj_produktu")
+    stari = models.PositiveIntegerField(verbose_name="Stáří (roky)")
+    ks = models.PositiveIntegerField(verbose_name="Ks", null=True, blank=True)
+    hmotnost = models.IntegerField(verbose_name="Hmotnost (kg)", null=True, blank=True)
+    cena_kg = models.IntegerField(verbose_name="Cena za kg", null=True, blank=True)
 
 
     class Meta:
@@ -113,3 +116,15 @@ class TBD(models.Model):
     class Meta:
         verbose_name = "TBD"
         verbose_name_plural = "TBD"
+
+
+class PracovniNaklady(models.Model):
+    rybnik = models.ForeignKey(Rybnik, on_delete=models.CASCADE)
+    date = models.DateField(verbose_name="Datum")
+    cas = models.PositiveSmallIntegerField(verbose_name="Čas (hodiny)")
+    popis_prace = models.CharField(verbose_name="Popis práce", max_length=255)
+    najete_km = models.IntegerField(verbose_name="Najeté km")
+
+    class Meta:
+        verbose_name = "Pracovní náklady"
+        verbose_name_plural = "Pracovní náklady"
