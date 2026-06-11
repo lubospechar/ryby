@@ -121,6 +121,9 @@ class Produkce(models.Model):
         verbose_name = "Produkce"
         verbose_name_plural = "Produkce"
 
+    def __str__(self):
+        return f"{self.rybnik} {self.nasazeno_vyloveno} {self.ryba} {self.stari} {self.rychlenka}"
+
 
 class TBD(models.Model):
     rybnik = models.ForeignKey(Rybnik, on_delete=models.CASCADE)
