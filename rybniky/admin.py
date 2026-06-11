@@ -189,6 +189,7 @@ class ProdukceAdmin(admin.ModelAdmin):
         "nasazeno_vyloveno",
         "ryba",
         "stari",
+        'rychlenka',
         "ks",
         "hmotnost",
         "cena_kg",
@@ -219,7 +220,7 @@ class ProdukceAdmin(admin.ModelAdmin):
         ),
         (
             "Ryba",
-            {"fields": ("ryba", "stari", "puvod", "zdroj")},
+            {"fields": ("ryba", "stari", "puvod", "zdroj", "rychlenka",)},
         ),
         (
             "Množství a cena",

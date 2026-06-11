@@ -2,8 +2,8 @@ from django.contrib.gis.db import models
 
 
 class OdpovednaOsoba(models.Model):
-    jmeno = models.CharField(max_length=255)
-    telefon = models.CharField(max_length=20)
+    jmeno = models.CharField(max_length=255, unique=True)
+    telefon = models.CharField(max_length=20, unique=True)
 
     class Meta:
         verbose_name = "Odpovědná osoba"
@@ -14,8 +14,8 @@ class OdpovednaOsoba(models.Model):
 
 
 class Vlastnik(models.Model):
-    jmeno = models.CharField(max_length=255)
-    telefon = models.CharField(max_length=20)
+    jmeno = models.CharField(max_length=255, unique=True)
+    telefon = models.CharField(max_length=20, unique=True)
 
     class Meta:
         verbose_name = "Vlastník"
@@ -36,7 +36,7 @@ class Rybnik(models.Model):
         KOMORA = "komora", "Komora"
         HLAVNI = "hlavni", "Hlavní rybník"
 
-    nazev = models.CharField(max_length=255, verbose_name="Název")
+    nazev = models.CharField(max_length=255, verbose_name="Název", unique=True)
     katastralni_obec = models.CharField(max_length=255, verbose_name="Katastrální obec")
     parcely = models.CharField(
         max_length=255, verbose_name="Parcely", null=True, blank=True
@@ -112,6 +112,7 @@ class Produkce(models.Model):
         related_name="zdroj_produktu",
     )
     stari = models.PositiveIntegerField(verbose_name="Stáří (roky)")
+    rychlenka = models.BooleanField(verbose_name="Rychlenka", default=False)
     ks = models.PositiveIntegerField(verbose_name="Ks", null=True, blank=True)
     hmotnost = models.IntegerField(verbose_name="Hmotnost (kg)", null=True, blank=True)
     cena_kg = models.IntegerField(verbose_name="Cena za kg", null=True, blank=True)
