@@ -38,22 +38,34 @@ class Rybnik(models.Model):
 
     nazev = models.CharField(max_length=255, verbose_name="Název")
     katastralni_obec = models.CharField(max_length=255, verbose_name="Katastrální obec")
-    parcely = models.CharField(max_length=255, verbose_name="Parcely", null=True, blank=True)
+    parcely = models.CharField(
+        max_length=255, verbose_name="Parcely", null=True, blank=True
+    )
     okres = models.CharField(max_length=255, verbose_name="Okres")
     kraj = models.CharField(max_length=255, verbose_name="Kraj")
-    katastralni_vodni_plocha = models.FloatField(verbose_name="Katastrální vodní plocha (ha)")
+    katastralni_vodni_plocha = models.FloatField(
+        verbose_name="Katastrální vodní plocha (ha)"
+    )
     zatopena_vodni_plocha = models.FloatField(verbose_name="Zatopená vodní plocha (ha)")
     hloubka = models.FloatField(verbose_name="Hloubka (m)")
-    charakter = models.CharField(max_length=255, choices=CharakterRybnika.choices, verbose_name="Charakter rybníka")
-    pouziti = models.CharField(max_length=255, choices=Pouziti.choices, verbose_name="Použití")
+    charakter = models.CharField(
+        max_length=255,
+        choices=CharakterRybnika.choices,
+        verbose_name="Charakter rybníka",
+    )
+    pouziti = models.CharField(
+        max_length=255, choices=Pouziti.choices, verbose_name="Použití"
+    )
     doba_nahaneni = models.IntegerField(verbose_name="Doba náhánění (dny)")
     doba_vypousteni = models.IntegerField(verbose_name="Doba výpouštění (dny)")
 
-    vlastnik = models.ForeignKey(Vlastnik, on_delete=models.CASCADE, null=True, blank=True)
-    odpovedna_osoba = models.ForeignKey(OdpovednaOsoba, on_delete=models.CASCADE, null=True, blank=True)
+    vlastnik = models.ForeignKey(
+        Vlastnik, on_delete=models.CASCADE, null=True, blank=True
+    )
+    odpovedna_osoba = models.ForeignKey(
+        OdpovednaOsoba, on_delete=models.CASCADE, null=True, blank=True
+    )
     polygon = models.PolygonField(verbose_name="Polygon", srid=4326)
-
-
 
     class Meta:
         verbose_name = "Rybník"
@@ -61,7 +73,6 @@ class Rybnik(models.Model):
 
     def __str__(self):
         return self.nazev
-
 
 
 class Ryba(models.Model):
@@ -75,23 +86,35 @@ class Ryba(models.Model):
         verbose_name = "Ryba"
         verbose_name_plural = "Ryby"
 
+
 class Produkce(models.Model):
     class NasazenoVyloveno(models.TextChoices):
         NASAZENO = "nasazeno", "Nasazeno"
         VYLOVENO = "vyloveno", "Vyloveno"
 
-
     rybnik = models.ForeignKey(Rybnik, on_delete=models.CASCADE)
     datum = models.DateField(verbose_name="Datum")
-    nasazeno_vyloveno = models.CharField(max_length=255, choices=NasazenoVyloveno.choices, verbose_name="Nasazeno/vyloveno")
+    nasazeno_vyloveno = models.CharField(
+        max_length=255,
+        choices=NasazenoVyloveno.choices,
+        verbose_name="Nasazeno/vyloveno",
+    )
     ryba = models.ForeignKey(Ryba, on_delete=models.CASCADE)
-    puvod = models.CharField(max_length=255, verbose_name="Původ", null=True, blank=True)
-    zdroj = models.ForeignKey(Rybnik, on_delete=models.CASCADE, verbose_name="Zdroj", null=True, blank=True, related_name="zdroj_produktu")
+    puvod = models.CharField(
+        max_length=255, verbose_name="Původ", null=True, blank=True
+    )
+    zdroj = models.ForeignKey(
+        Rybnik,
+        on_delete=models.CASCADE,
+        verbose_name="Zdroj",
+        null=True,
+        blank=True,
+        related_name="zdroj_produktu",
+    )
     stari = models.PositiveIntegerField(verbose_name="Stáří (roky)")
     ks = models.PositiveIntegerField(verbose_name="Ks", null=True, blank=True)
     hmotnost = models.IntegerField(verbose_name="Hmotnost (kg)", null=True, blank=True)
     cena_kg = models.IntegerField(verbose_name="Cena za kg", null=True, blank=True)
-
 
     class Meta:
         verbose_name = "Produkce"
@@ -101,17 +124,29 @@ class Produkce(models.Model):
 class TBD(models.Model):
     rybnik = models.ForeignKey(Rybnik, on_delete=models.CASCADE)
     datum = models.DateTimeField(verbose_name="Datum a čas")
-    mimoradna_obchuzka = models.BooleanField(verbose_name="Mimorádná obchůzka", default=False)
+    mimoradna_obchuzka = models.BooleanField(
+        verbose_name="Mimorádná obchůzka", default=False
+    )
     oblacnost = models.CharField(max_length=255, verbose_name="Oblačnost")
     vitr = models.CharField(max_length=255, verbose_name="Vítr", default="bezvětří")
     teplota = models.FloatField(verbose_name="Teplota °C")
     srazky = models.FloatField(verbose_name="Srážky (mm)", default=0)
-    normalni_stav_hladiny = models.BooleanField(verbose_name="Normální stav hladiny", default=True)
-    rozdil_stavu_hladiny = models.IntegerField(verbose_name="Rozdíl stavu hladiny (cm)", default=0)
+    normalni_stav_hladiny = models.BooleanField(
+        verbose_name="Normální stav hladiny", default=True
+    )
+    rozdil_stavu_hladiny = models.IntegerField(
+        verbose_name="Rozdíl stavu hladiny (cm)", default=0
+    )
     zavady = models.BooleanField(verbose_name="Závady", max_length=255, default=False)
-    navrh_uprav = models.TextField(verbose_name="Návrh úprav v případě závad", null=True, blank=True)
-    poznamka = models.CharField(verbose_name="Poznámka", max_length=255, null=True, blank=True)
-    podpis = models.ImageField(verbose_name="Podpis", upload_to="podpisy", null=True, blank=True)
+    navrh_uprav = models.TextField(
+        verbose_name="Návrh úprav v případě závad", null=True, blank=True
+    )
+    poznamka = models.CharField(
+        verbose_name="Poznámka", max_length=255, null=True, blank=True
+    )
+    podpis = models.ImageField(
+        verbose_name="Podpis", upload_to="podpisy", null=True, blank=True
+    )
 
     class Meta:
         verbose_name = "TBD"

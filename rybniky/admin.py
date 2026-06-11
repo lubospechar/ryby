@@ -1,12 +1,21 @@
 from django.contrib import admin
 from leaflet.admin import LeafletGeoAdmin
 
-from rybniky.models import Rybnik, Vlastnik, OdpovednaOsoba, TBD, Ryba, Produkce, PracovniNaklady
+from rybniky.models import (
+    Rybnik,
+    Vlastnik,
+    OdpovednaOsoba,
+    TBD,
+    Ryba,
+    Produkce,
+    PracovniNaklady,
+)
 
 
 @admin.register(Vlastnik)
 class VlastnikAdmin(admin.ModelAdmin):
     list_display = ("jmeno", "telefon")
+
 
 @admin.register(OdpovednaOsoba)
 class OdpovednaOsobaAdmin(admin.ModelAdmin):
@@ -36,7 +45,6 @@ class RybnikAdmin(LeafletGeoAdmin):
         "kraj",
     )
     ordering = ("nazev",)
-
 
     leaflet_default_lon = 15
     leaflet_default_lat = 50
@@ -87,11 +95,7 @@ class RybnikAdmin(LeafletGeoAdmin):
         ),
         (
             "Mapa",
-            {
-                "fields": (
-                    "polygon",
-                )
-            },
+            {"fields": ("polygon",)},
         ),
     )
 
@@ -100,7 +104,7 @@ class RybnikAdmin(LeafletGeoAdmin):
 class TBDAdmin(admin.ModelAdmin):
     list_display = (
         "rybnik",
-        'datum',
+        "datum",
         "mimoradna_obchuzka",
         "teplota",
         "srazky",
@@ -109,7 +113,7 @@ class TBDAdmin(admin.ModelAdmin):
     )
     list_filter = (
         "rybnik",
-        'datum',
+        "datum",
         "mimoradna_obchuzka",
         "normalni_stav_hladiny",
     )
@@ -126,13 +130,7 @@ class TBDAdmin(admin.ModelAdmin):
     fieldsets = (
         (
             "Základní údaje",
-            {
-                "fields": (
-                    "rybnik",
-                    "mimoradna_obchuzka",
-                    'datum'
-                )
-            },
+            {"fields": ("rybnik", "mimoradna_obchuzka", "datum")},
         ),
         (
             "Počasí",
@@ -208,7 +206,6 @@ class ProdukceAdmin(admin.ModelAdmin):
     )
     date_hierarchy = "datum"
 
-
     fieldsets = (
         (
             "Základní údaje",
@@ -222,14 +219,7 @@ class ProdukceAdmin(admin.ModelAdmin):
         ),
         (
             "Ryba",
-            {
-                "fields": (
-                    "ryba",
-                    "stari",
-                    "puvod",
-                    "zdroj"
-                )
-            },
+            {"fields": ("ryba", "stari", "puvod", "zdroj")},
         ),
         (
             "Množství a cena",
@@ -242,7 +232,6 @@ class ProdukceAdmin(admin.ModelAdmin):
             },
         ),
     )
-
 
 
 @admin.register(PracovniNaklady)
@@ -267,9 +256,7 @@ class PracovniNakladyAdmin(admin.ModelAdmin):
         "rybnik__nazev",
     )
     date_hierarchy = "date"
-    autocomplete_fields = (
-        "rybnik",
-    )
+    autocomplete_fields = ("rybnik",)
 
     fieldsets = (
         (
@@ -292,10 +279,6 @@ class PracovniNakladyAdmin(admin.ModelAdmin):
         ),
         (
             "Doprava",
-            {
-                "fields": (
-                    "najete_km",
-                )
-            },
+            {"fields": ("najete_km",)},
         ),
     )
